@@ -1,0 +1,1242 @@
+utils/apiFeatures.js
+
+class APIFeatures {
+
+    constructor(query, queryStr) {
+
+        this.query = query;
+
+        this.queryStr = queryStr;
+
+    }
+
+
+    search() {
+
+        const keyword = this.queryStr.keyword ? {
+
+            name: {
+
+                $regex: this.queryStr.keyword,
+
+                $options: 'i'
+
+            }
+
+        } : {}
+
+        console.log(this.queryStr);
+
+        this.query = this.query.find({ ...keyword });
+
+        return this;
+
+    }
+
+   }
+
+
+http://localhost:4000/api/v1/products?keyword=apple
+
+
+const apiFeatures = new APIFeatures(Product.find(),req.query).search().filter()
+
+
+utils/apiFeatures.js
+
+products?keyword=apple&price[gte]=1&price[lte]=200
+
+filter() {
+
+
+        const queryCopy = { ...this.queryStr };
+
+        // console.log(queryCopy);
+
+        // Removing fields from the query
+
+        const removeFields = ['keyword', 'limit', 'page']
+
+        removeFields.forEach(el => delete queryCopy[el]);
+
+        
+
+        // Advance filter for price, ratings etc
+
+        let queryStr = JSON.stringify(queryCopy);
+
+        console.log(queryStr);
+
+        queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, match => `$${match}`)
+
+        console.log(queryStr);
+
+        this.query = this.query.find(JSON.parse(queryStr));
+
+        console.log(JSON.parse(queryStr));
+
+        return this;
+
+    }
+
+
+ pagination(resPerPage) {
+
+        const currentPage = Number(this.queryStr.page) || 1;
+
+        const skip = resPerPage * (currentPage - 1);
+
+
+        this.query = this.query.limit(resPerPage).skip(skip);
+
+        return this;
+
+    }
+
+
+productcontroller
+
+    exports.getProducts = async (req, res, next) => {
+
+	const resPerPage = 4;
+
+	const productsCount = await Product.countDocuments();
+
+	// console.log(productsCount,req.query,Product.find())
+
+	// console.log(Product.find())
+
+	const apiFeatures = new APIFeatures(Product.find(),req.query).search().filter()
+
+
+	// const products = await Product.find();
+
+	apiFeatures.pagination(resPerPage);
+
+	const products = await apiFeatures.query;
+
+	
+
+	// console.log(products)
+
+	res.status(200).json({
+
+		success: true,
+
+		count: products.length,
+
+		productsCount,
+
+		products
+
+	})
+
+}
+
+
+utils/errorHandler.js
+
+class ErrorHandler extends Error {
+
+    constructor(message, statusCode) {
+
+        super(message);
+
+        this.statusCode = statusCode
+
+
+        Error.captureStackTrace(this, this.constructor)
+
+    }
+
+}
+
+
+productcontroller
+
+exports.getSingleProduct = catchAsyncErrors(async(req,res,next) => {
+
+	const product = await Product.findById(req.params.id);
+
+	console.log(product);
+
+	// if(!product) {
+
+	// 		return res.status(404).json({
+
+	// 			success: false,
+
+	// 			message: 'Product not found'
+
+	// 		});
+
+	// }
+
+	  if(!product) {
+
+			return next(new ErrorHandler('Product not found',404));
+
+	}
+
+	res.status(200).json({
+
+		success: true,
+
+		product
+
+	})
+
+})
+
+
+module.exports = ErrorHandler;
+
+
+models/user.js
+
+const mongoose = require('mongoose');
+
+const validator = require('validator');
+
+const bcrypt = require('bcryptjs');
+
+const jwt = require('jsonwebtoken');
+
+const crypto = require('crypto')
+
+
+const userSchema = new mongoose.Schema({
+
+    name: {
+
+        type: String,
+
+        required: [true, 'Please enter your name'],
+
+        maxLength: [30, 'Your name cannot exceed 30 characters']
+
+    },
+
+    email: {
+
+        type: String,
+
+        required: [true, 'Please enter your email'],
+
+        unique: true,
+
+        validate: [validator.isEmail, 'Please enter valid email address']
+
+    },
+
+    password: {
+
+        type: String,
+
+        required: [true, 'Please enter your password'],
+
+        minlength: [6, 'Your password must be longer than 6 characters'],
+
+        select: false
+
+    },
+
+    avatar: {
+
+        public_id: {
+
+            type: String,
+
+            required: true
+
+        },
+
+        url: {
+
+            type: String,
+
+            required: true
+
+        }
+
+    },
+
+    role: {
+
+        type: String,
+
+        default: 'user'
+
+    },
+
+    createdAt: {
+
+        type: Date,
+
+        default: Date.now
+
+    },
+
+    resetPasswordToken: String,
+
+    resetPasswordExpire: Date
+
+
+})
+
+
+// uncomment to test bcrypt
+
+ userSchema.pre('save', async function (next) {
+
+     if (!this.isModified('password')) {
+
+         next()
+
+  	}
+
+
+     this.password = await bcrypt.hash(this.password, 10)
+
+ });
+
+
+// Return JWT token
+
+
+
+module.exports = mongoose.model('User', userSchema);
+
+
+
+controllers/authController.js
+
+const User = require('../models/user');
+
+
+const ErrorHandler = require('../utils/errorHandler');
+
+
+exports.registerUser = async (req, res, next) => {
+
+	const { name, email, password } = req.body;
+
+	const user = await User.create({
+
+        name,
+
+        email,
+
+        password,
+
+        avatar: {
+
+            public_id: 'avatars/sxamgzs1aj91rqahehqe',
+
+            url: 'https://res.cloudinary.com/dgneiaky7/image/upload/v1649818466/avatars/sxamgzs1aj91rqahehqe.png'
+
+        }
+
+    })
+
+	//test token
+
+	// const token = user.getJwtToken();
+
+	 
+
+	  res.status(201).json({
+
+	  	success:true,
+
+	  	user,
+
+	// 	token
+
+	  })
+
+	//  sendToken(user, 200, res)
+
+};
+
+
+
+routes/auth.js
+
+const express = require('express');
+
+const router = express.Router();
+
+
+const { registerUser, } = require('../controllers/authController');
+
+router.route('/register').post(registerUser);
+
+// router.route('/login').post(loginUser);
+
+
+// router.route('/password/forgot').post(forgotPassword);
+
+// router.route('/password/reset/:token').put(resetPassword);
+
+
+// router.route('/logout').get(logout);
+
+
+module.exports = router;
+
+
+
+app,js
+
+const auth = require('./routes/auth');
+
+app.use('/api/v1',auth);
+
+.env
+
+JWT_SECRET = THEQUICKBROWNFOX
+
+JWT_EXPIRES_TIME = 7d
+
+COOKIE_EXPIRES_TIME = 7
+
+
+userSchema.methods.getJwtToken = function () {
+
+    return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+
+        expiresIn: process.env.JWT_EXPIRES_TIME
+
+    });
+
+}
+
+
+
+
+SMTP_HOST = smtp.mailtrap.io
+
+SMTP_PORT = 2525
+
+SMTP_EMAIL = 
+
+SMTP_PASSWORD = 
+
+SMTP_FROM_EMAIL = noreply@gmail.com
+
+SMTP_FROM_NAME = admin
+
+
+
+
+
+
+authcontroller
+
+exports.registerUser = async (req, res, next) => {
+
+	const { name, email, password } = req.body;
+
+	const user = await User.create({
+
+        name,
+
+        email,
+
+        password,
+
+        avatar: {
+
+            public_id: 'avatars/sxamgzs1aj91rqahehqe',
+
+            url: 'https://res.cloudinary.com/dgneiaky7/image/upload/v1649818466/avatars/sxamgzs1aj91rqahehqe.png'
+
+        }
+
+    })
+
+	//test token
+
+	const token = user.getJwtToken();
+
+	 
+
+	res.status(201).json({
+
+		success:true,
+
+		user,
+
+		token
+
+	})
+
+	//  sendToken(user, 200, res)
+
+};
+
+
+autcontroller
+
+exports.loginUser = async (req, res, next) => {
+
+    const { email, password } = req.body;
+
+
+    // Checks if email and password is entered by user
+
+    if (!email || !password) {
+
+        return next(new ErrorHandler('Please enter email & password', 400))
+
+    }
+
+
+    // Finding user in database
+
+    const user = await User.findOne({ email }).select('+password')
+
+
+    if (!user) {
+
+        return next(new ErrorHandler('Invalid Email or Password', 401));
+
+    }
+
+
+    // Checks if password is correct or not
+
+    const isPasswordMatched = await user.comparePassword(password);
+
+
+    if (!isPasswordMatched) {
+
+        return next(new ErrorHandler('Invalid Email or Password', 401));
+
+    }
+
+    const token = user.getJwtToken();
+
+
+	res.status(201).json({
+
+		success:true,
+
+		token
+
+	});
+
+    // sendToken(user, 200, res)
+
+}
+
+
+uesr model
+
+userSchema.methods.comparePassword = async function (enteredPassword) {
+
+    return await bcrypt.compare(enteredPassword, this.password)
+
+}
+
+
+routes/auth
+
+const { registerUser, loginUser } = require('../controllers/authController');
+
+router.route('/register').post(registerUser);
+
+router.route('/login').post(loginUser);
+
+
+
+utils/jwtToken.js
+
+const sendToken = (user, statusCode, res) => {
+
+
+    // Create Jwt token
+
+    const token = user.getJwtToken();
+
+
+    // Options for cookie
+
+    const options = {
+
+        expires: new Date(
+
+            Date.now() + process.env.COOKIE_EXPIRES_TIME * 24 * 60 * 60 * 1000
+
+        ),
+
+        httpOnly: true
+
+    }
+
+    res.status(statusCode).cookie('token', token, options).json({
+
+        success: true,
+
+        token,
+
+        user
+
+    })
+
+
+}
+
+
+module.exports = sendToken;
+
+
+login/register
+
+sendToken(user, 200, res)
+
+
+middlewares/auth.js
+
+const User = require('../models/user')
+
+
+const jwt = require("jsonwebtoken");
+
+const ErrorHandler = require("../utils/errorHandler");
+
+
+
+// Checks if user is authenticated or not
+
+exports.isAuthenticatedUser = async (req, res, next) => {
+
+
+    const { token } = req.cookies
+
+    console.log(token)
+
+
+    if (!token) {
+
+        return next(new ErrorHandler('Login first to access this resource.', 401))
+
+    }
+
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+
+    req.user = await User.findById(decoded.id);
+
+
+    next()
+
+};
+
+
+
+routes/auth
+
+router.get('/products', isAuthenticatedUser,  getProducts)
+
+
+app.js
+
+const cookieParser = require('cookie-parser')
+
+
+app.use(express.json());
+
+app.use(cookieParser());
+
+
+authcontroller
+
+exports.logout = async (req, res, next) => {
+
+    res.cookie('token', null, {
+
+        expires: new Date(Date.now()),
+
+        httpOnly: true
+
+    })
+
+
+    res.status(200).json({
+
+        success: true,
+
+        message: 'Logged out'
+
+    })
+
+}
+
+
+routes/auth
+
+router.route('/logout').get(logout);
+
+
+middlewares/auth
+
+exports.authorizeRoles = (...roles) => {
+
+	console.log(roles);
+
+    return (req, res, next) => {
+
+        if (!roles.includes(req.user.role)) {
+
+            return next(
+
+                new ErrorHandler(`Role (${req.user.role}) is not allowed to acccess this resource`, 403))
+
+        }
+
+        next()
+
+    }
+
+}
+
+
+routes/product
+
+const { isAuthenticatedUser,
+
+        authorizeRoles 
+
+    } = require('../middlewares/auth');
+
+
+router.get('/products',  isAuthenticatedUser,  authorizeRoles('admin'), getProducts)
+
+router.post('/admin/product/new', isAuthenticatedUser, authorizeRoles('admin'), newProduct);
+
+
+router.route('/admin/product/:id').put(isAuthenticatedUser, authorizeRoles('admin'), updateProduct).delete(isAuthenticatedUser, authorizeRoles('admin'), deleteProduct);
+
+
+model/products
+
+user: {
+
+        type: mongoose.Schema.ObjectId,
+
+        ref: 'User',
+
+        required: true
+
+    },
+
+
+productcontroller
+
+exports.newProduct = async (req, res, next) => {
+
+	console.log(req.user);
+
+	req.body.user = req.user.id;
+
+	const product = await Product.create(req.body);
+
+
+	res.status(201).json({
+
+		success: true,
+
+		product
+
+	})
+
+}
+
+
+user model
+
+userSchema.methods.getResetPasswordToken = function () {
+
+    // Generate token
+
+    const resetToken = crypto.randomBytes(20).toString('hex');
+
+
+    // Hash and set to resetPasswordToken
+
+    this.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex')
+
+
+    // Set token expire time
+
+    this.resetPasswordExpire = Date.now() + 30 * 60 * 1000
+
+
+    return resetToken
+
+
+}
+
+
+authcontroller
+
+exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
+
+
+    const user = await User.findOne({ email: req.body.email });
+
+
+    if (!user) {
+
+        return next(new ErrorHandler('User not found with this email', 404));
+
+    }
+
+
+    // Get reset token
+
+    const resetToken = user.getResetPasswordToken();
+
+
+    await user.save({ validateBeforeSave: false });
+
+
+    // Create reset password url
+
+    const resetUrl = `${req.protocol}://${req.get('host')}/password/reset/${resetToken}`;
+
+
+    const message = `Your password reset token is as follow:\n\n${resetUrl}\n\nIf you have not requested this email, then ignore it.`
+
+
+    try {
+
+
+        await sendEmail({
+
+            email: user.email,
+
+            subject: 'ShopIT Password Recovery',
+
+            message
+
+        })
+
+
+        res.status(200).json({
+
+            success: true,
+
+            message: `Email sent to: ${user.email}`
+
+        })
+
+
+    } catch (error) {
+
+        user.resetPasswordToken = undefined;
+
+        user.resetPasswordExpire = undefined;
+
+
+        await user.save({ validateBeforeSave: false });
+
+
+        return next(new ErrorHandler(error.message, 500))
+
+    }
+
+
+})
+
+exports.resetPassword = async (req, res, next) => {
+
+
+    // Hash URL token
+
+    const resetPasswordToken = crypto.createHash('sha256').update(req.params.token).digest('hex')
+
+
+    const user = await User.findOne({
+
+        resetPasswordToken,
+
+        resetPasswordExpire: { $gt: Date.now() }
+
+    })
+
+
+    if (!user) {
+
+        return next(new ErrorHandler('Password reset token is invalid or has been expired', 400))
+
+    }
+
+
+    if (req.body.password !== req.body.confirmPassword) {
+
+        return next(new ErrorHandler('Password does not match', 400))
+
+    }
+
+
+    // Setup new password
+
+    user.password = req.body.password;
+
+
+    user.resetPasswordToken = undefined;
+
+    user.resetPasswordExpire = undefined;
+
+
+    await user.save();
+
+
+    sendToken(user, 200, res);
+
+    }
+
+// {
+
+// 	"password": "password2",
+
+// 	"confirmPassword":password2
+
+// }
+
+
+utils/sendEmail
+
+const nodemailer = require('nodemailer');
+
+
+const sendEmail = async options => {
+
+    const transporter = nodemailer.createTransport({
+
+        host: process.env.SMTP_HOST,
+
+        port: process.env.SMTP_PORT,
+
+        auth: {
+
+            user: process.env.SMTP_EMAIL,
+
+            pass: process.env.SMTP_PASSWORD
+
+        }
+
+    });
+
+
+    const message = {
+
+        from: `${process.env.SMTP_FROM_NAME} <${process.env.SMTP_FROM_EMAIL}>`,
+
+        to: options.email,
+
+        subject: options.subject,
+
+        text: options.message
+
+    }
+
+
+    await transporter.sendMail(message)
+
+}
+
+
+module.exports = sendEmail;
+
+
+
+authcontroller
+
+exports.resetPassword = async (req, res, next) => {
+
+
+    // Hash URL token
+
+    const resetPasswordToken = crypto.createHash('sha256').update(req.params.token).digest('hex')
+
+
+    const user = await User.findOne({
+
+        resetPasswordToken,
+
+        resetPasswordExpire: { $gt: Date.now() }
+
+    })
+
+
+    if (!user) {
+
+        return next(new ErrorHandler('Password reset token is invalid or has been expired', 400))
+
+    }
+
+
+    if (req.body.password !== req.body.confirmPassword) {
+
+        return next(new ErrorHandler('Password does not match', 400))
+
+    }
+
+
+    // Setup new password
+
+    user.password = req.body.password;
+
+
+    user.resetPasswordToken = undefined;
+
+    user.resetPasswordExpire = undefined;
+
+
+    await user.save();
+
+
+    sendToken(user, 200, res);
+
+// {
+
+// 	"password": "password2",
+
+// 	"confirmPassword":password2
+
+// }
+
+}
+
+
+authcontroller
+
+exports.getUserProfile = catchAsyncErrors(async (req, res, next) => {
+
+    const user = await User.findById(req.user.id);
+
+
+    res.status(200).json({
+
+        success: true,
+
+        user
+
+    })
+
+})
+
+
+routes/auth
+
+
+const { registerUser, 
+
+        loginUser, 
+
+        logout, 
+
+        forgotPassword, 
+
+        resetPassword,
+
+        getUserProfile
+
+
+        } = require('../controllers/authController');
+
+const { isAuthenticatedUser,
+
+            authorizeRoles 
+
+        } = require('../middlewares/auth');
+
+router.get('/me', isAuthenticatedUser, getUserProfile)
+
+
+authcontroller
+
+exports.updatePassword = async (req, res, next) => {
+
+    const user = await User.findById(req.user.id).select('password');
+
+
+    // Check previous user password
+
+    const isMatched = await user.comparePassword(req.body.oldPassword)
+
+    if (!isMatched) {
+
+        return next(new ErrorHandler('Old password is incorrect'));
+
+    }
+
+
+    user.password = req.body.password;
+
+    await user.save();
+
+
+    sendToken(user, 200, res)
+
+
+}
+
+router.put('/password/update', isAuthenticatedUser, updatePassword)
+
+
+exports.updateProfile = async (req, res, next) => {
+
+    const newUserData = {
+
+        name: req.body.name,
+
+        email: req.body.email
+
+    }
+
+    const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
+
+        new: true,
+
+        runValidators: true,
+
+        // useFindAndModify: false
+
+    })
+
+
+    res.status(200).json({
+
+        success: true
+
+    })
+
+}
+
+router.put('/me/update', isAuthenticatedUser, updateProfile)
+
+
+exports.allUsers = async (req, res, next) => {
+
+    const users = await User.find();
+
+
+    res.status(200).json({
+
+        success: true,
+
+        users
+
+    })
+
+}
+
+
+router.route('/admin/users').get(isAuthenticatedUser, authorizeRoles('admin'), allUsers)
+
+
+exports.getUserDetails = async (req, res, next) => {
+
+    const user = await User.findById(req.params.id);
+
+
+    if (!user) {
+
+        return next(new ErrorHandler(`User does not found with id: ${req.params.id}`))
+
+    }
+
+
+    res.status(200).json({
+
+        success: true,
+
+        user
+
+    })
+
+}
+
+
+// Update user profile   =>   /api/v1/admin/user/:id
+
+exports.updateUser = async (req, res, next) => {
+
+    const newUserData = {
+
+        name: req.body.name,
+
+        email: req.body.email,
+
+        role: req.body.role
+
+    }
+
+
+    const user = await User.findByIdAndUpdate(req.params.id, newUserData, {
+
+        new: true,
+
+        runValidators: true,
+
+        // useFindAndModify: false
+
+    })
+
+
+    res.status(200).json({
+
+        success: true
+
+    })
+
+}
+
+
+// Delete user   =>   /api/v1/admin/user/:id
+
+exports.deleteUser = async (req, res, next) => {
+
+    const user = await User.findById(req.params.id);
+
+
+    if (!user) {
+
+        return next(new ErrorHandler(`User does not found with id: ${req.params.id}`))
+
+    }
+
+
+    // Remove avatar from cloudinary
+
+    // const image_id = user.avatar.public_id;
+
+    // await cloudinary.v2.uploader.destroy(image_id);
+
+
+    await user.remove();
+
+
+    res.status(200).json({
+
+        success: true,
+
+    })
+
+}
+
+
+router.route('/admin/user/:id')
+
+    .get(isAuthenticatedUser, authorizeRoles('admin'), getUserDetails)
+
+    .put(isAuthenticatedUser, authorizeRoles('admin'), updateUser)
+
+    .delete(isAuthenticatedUser, authorizeRoles('admin'), deleteUser)
+
+

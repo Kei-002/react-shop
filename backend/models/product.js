@@ -139,15 +139,13 @@ const productSchema = new mongoose.Schema({
     },
   ],
 
-  // user: {
+  user: {
+    type: mongoose.Schema.ObjectId,
 
-  //     type: mongoose.Schema.ObjectId,
+    ref: "User",
 
-  //     ref: 'User',
-
-  //     required: true
-
-  // },
+    required: true,
+  },
 
   createdAt: {
     type: Date,

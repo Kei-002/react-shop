@@ -162,7 +162,7 @@ exports.getSingleProduct = catchAsyncErrors(async(req,res,next) => {
 
 	// if(!product) {
 
-	// 		return res.status(404).json({
+	// 		return res.status(404).json({   
 
 	// 			success: false,
 

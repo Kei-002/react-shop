@@ -1,0 +1,1213 @@
+shopit/frontend/npx create-react-app .
+npm i axios react-alert react-alert-template-basic react-bootstrap react-helmet react-redux redux redux-thunk redux-devtools-extension react-router-dom
+copy index.html
+
+delete src/index.css
+logo report setup app.test
+
+//app.css
+copy from github
+
+
+//components/layout/header.js
+import React, { Fragment } from 'react'
+import '../../App.css'
+
+const Header = () => {
+    
+    return (
+        <Fragment>
+          <nav class="navbar row">
+			      <div class="col-12 col-md-3">
+			        <div class="navbar-brand">
+			          <img src="./images/shopit_logo.png" />
+			        </div>
+			      </div>
+		      <div class="col-12 col-md-6 mt-2 mt-md-0">
+			        <div class="input-group">
+			          <input
+			            type="text"
+			            id="search_field"
+			            class="form-control"
+			            placeholder="Enter Product Name ..."
+			          />
+			          <div class="input-group-append">
+			            <button id="search_btn" class="btn">
+			              <i class="fa fa-search" aria-hidden="true"></i>
+			            </button>
+			          </div>
+			        </div>
+			      </div>
+
+			      <div class="col-12 col-md-3 mt-4 mt-md-0 text-center">
+			        <button class="btn" id="login_btn">Login</button>
+
+			        <span id="cart" class="ml-3">Cart</span>
+			        <span class="ml-1" id="cart_count">2</span>
+			      </div>
+			    </nav>
+        </Fragment>
+    )
+}
+
+export default Header
+
+//components/layout/footer.js
+
+import React, { Fragment } from 'react'
+
+const Footer = () => {
+    return (
+        <Fragment>
+            <footer className="py-1">
+                <p className="text-center mt-1">
+                    Shopping Cart - 2019-2020, All Rights Reserved
+                </p>
+            </footer>
+        </Fragment>
+    )
+}
+
+export default Footer
+
+app.js
+import React from 'react'
+import Header from './components/layout/Header'
+import Footer from './components/layout/Footer'
+
+
+function App() {
+  return (
+    <div className="App">
+      <Header />
+      <Footer />
+    </div>
+  );
+}
+
+//get images from github repo
+
+export default App;
+
+index.js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+
+
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+
+//index.html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Complete ecommerce site using MERN"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    />
+    <link
+    rel="stylesheet"
+    type="text/css"
+    href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+  />
+    <link
+      href="//db.onlinewebfonts.com/c/157c6cc36dd65b1b2adc9e7f3329c761?family=Amazon+Ember"
+      rel="stylesheet"
+      type="text/css"
+    />
+    
+    <title>ShopIT - Complete Ecommerce Project</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+
+  </body>
+</html>
+
+//components/home.js
+
+import React, { Fragment } from 'react'
+
+const Home = () => {
+    return (
+    <div className="container container-fluid">
+    	<h1 id="products_heading">Latest Products</h1>
+    	<section id="products" className="container mt-5">
+      <div className="row">
+        <div className="col-sm-12 col-md-6 col-lg-3 my-3">
+          <div className="card p-3 rounded">
+            <img
+              className="card-img-top mx-auto"
+              src="https://m.media-amazon.com/images/I/617NtexaW2L._AC_UY218_.jpg"
+            />
+            <div className="card-body d-flex flex-column">
+              <h5 className="card-title">
+                <a href="">128GB Solid Storage Memory card - SanDisk Ultra</a>
+              </h5>
+              <div className="ratings mt-auto">
+                <div className="rating-outer">
+                  <div className="rating-inner"></div>
+                </div>
+                <span id="no_of_reviews">(5 Reviews)</span>
+              </div>
+              <p className="card-text">$45.67</p>
+              <a href="#" id="view_btn" className="btn btn-block">View Details</a>
+            </div>
+          </div>
+        </div>
+        </div>
+        </section>
+    </div>
+    )
+}
+
+export default Home
+
+create components/layout/Metadata.js
+import React from 'react'
+import { Helmet } from 'react-helmet'
+
+const MetaData = ({ title }) => {
+    return (
+        <Helmet>
+            <title>{`${title} - ShopIT`}</title>
+        </Helmet>
+    )
+}
+
+export default MetaData
+
+edit //home.js
+ <Fragment>
+    <MetaData title={'Buy Best Products Online'} />
+
+//src/store.js
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import { composeWithDevTools } from 'redux-devtools-extension'
+
+const reducer = combineReducers({
+
+})
+
+let initialState = {
+
+}
+
+const middlware = [thunk]
+const store = createStore(reducer, initialState, composeWithDevTools(applyMiddleware(...middlware)))
+
+export default store;
+
+
+//index.js
+import { Provider } from 'react-redux'
+import store from './store'
+ReactDOM.render(
+  <Provider store={store} >
+    <App />
+  </Provider >,
+  document.getElementById('root')
+);
+
+//reducers/productReducers.js
+import { ALL_PRODUCTS_REQUEST,
+		 ALL_PRODUCTS_SUCCESS, 
+		 ALL_PRODUCTS_FAIL,
+		 CLEAR_ERRORS 
+		} from '../constants/productConstants'
+export const productsReducer = (state = { products:[] }, action) => {
+	switch(action.type) {
+		case ALL_PRODUCTS_REQUEST:
+			return {
+				loading: true,
+				propducts:[]
+			}
+		case ALL_PRODUCTS_SUCCESS:
+			return {
+				loading:false,
+				products: action.payload.products,
+				productsCount: action.payload.productsCount
+			}
+		case ALL_PRODUCTS_FAIL:
+			return {
+				loading:false,
+				error: action.payload
+			}
+		case CLEAR_ERRORS:
+			return {
+				...state,
+				error: null
+			}
+		default:
+			return state;
+	}
+}
+
+
+//src/constants/productConstants.js
+export const ALL_PRODUCTS_REQUEST = 'ALL_PRODUCTS_REQUEST'
+export const ALL_PRODUCTS_SUCCESS = 'ALL_PRODUCTS_SUCCES'
+export const ALL_PRODUCTS_FAIL = 'ALL_PRODUCTS_FAIL'
+
+export const CLEAR_ERRORS = 'CLEAR_ERRORS'
+
+//store.js
+import { productsReducer } from './reducers/productReducers'
+const reducer = combineReducers({
+	products: productsReducer
+})
+
+//actions/productAction.js
+import axios from axios;
+
+import { ALL_PRODUCTS_REQUEST,
+		 ALL_PRODUCTS_SUCCESS, 
+		 ALL_PRODUCTS_FAIL,
+		 CLEAR_ERRORS 
+		} from '../constants/productConstants';
+
+export const getProducts = () => async (dispatch) => {
+	try {
+		dispatch({
+			type: ALL_PRODUCTS_REQUEST
+		})
+			const {data} = await axios.get('/api/v1/products')
+		
+		dispatch({
+			type: ALL_PRODUCTS_SUCCESS,
+			payload: data
+		})
+
+	} catch(error) {
+		dispatch({
+			type: ALL_PRODUCTS_FAIL,
+			payload: error.response.data.message
+		})
+	}
+}
+
+export const clearErrors = () => async (dispatch) =>{
+	dispatch({
+		type: CLEAR_ERRORS
+
+	})
+}
+
+//frontend/package.json
+"proxy": "http://127.0.0.1:4000"
+
+//home.js
+import { useDispatch, useSelector } from 'react-redux'
+import { getProducts } from '../actions/productActions'
+const Home = () => {
+	
+	const dispatch = useDispatch();
+	
+	const {loading,products,error, productsCount } = useSelector(state => state.products);
+	
+	useEffect( () => { 
+		dispatch(getProducts())
+	}, [dispatch] );
+
+    return (...
+
+
+//home.js
+
+return (
+    <Fragment>
+    <MetaData title={'Buy Best Products Online'} />
+    	<h1 id="products_heading">Latest Products</h1>
+	    <section id="products" className="container mt-5">
+	      <div className="row">
+	      	{products && products.map(product => (
+	      	<div keys={product._id }className="col-sm-12 col-md-6 col-lg-3 my-3">
+	          <div className="card p-3 rounded">
+	            <img
+	              className="card-img-top mx-auto"
+	              src={product.images[0].url}
+	            />
+	            <div className="card-body d-flex flex-column">
+	              <h5 className="card-title">
+	                <a href="">{product.name}</a>
+	              </h5>
+	              <div className="ratings mt-auto">
+	                <div className="rating-outer">
+	                  <div className="rating-inner" style={ {width: `${(product.ratings / 5) * 100}%`}}></div>
+	                </div>
+	                <span id="no_of_reviews">({product.numOfReviews} reviews)</span>
+	              </div>
+	              <p className="card-text">${product.price}</p>
+	              <a href="#" id="view_btn" className="btn btn-block">View Details</a>
+	            </div>
+	          </div>
+	        </div>
+	      		))}
+	        
+	        </div>
+	        </section>
+    </Fragment>
+    );
+}
+
+
+//home.js
+<section id="products" className="container mt-5">
+	    	<div className="row">
+	      	{products && products.map(product => (
+	      		<Product key={product._id } product={product} />
+	      	))}
+	      	</div>
+	    </section>
+
+//components/product/Product.js
+import React from 'react'
+
+const Product = ({product}) => {
+	return ( 
+		<div className="col-sm-12 col-md-6 col-lg-3 my-3">
+	          <div className="card p-3 rounded">
+	            <img
+	              className="card-img-top mx-auto"
+	              src={product.images[0].url}
+	            />
+	            <div className="card-body d-flex flex-column">
+	              <h5 className="card-title">
+	                <a href="">{product.name}</a>
+	              </h5>
+	              <div className="ratings mt-auto">
+	                <div className="rating-outer">
+	                  <div className="rating-inner" style={ {width: `${(product.ratings / 5) * 100}%`}}></div>
+	                </div>
+	                <span id="no_of_reviews">({product.numOfReviews} reviews)</span>
+	              </div>
+	              <p className="card-text">${product.price}</p>
+	              <a href="#" id="view_btn" className="btn btn-block">View Details</a>
+	            </div>
+	          </div>
+	        </div>
+	      )
+}
+export default Product
+
+//Product.js
+<Link to={`/product/${product._id}`} id="view_btn" className="btn btn-block">View Details</Link>
+
+//layout/Loader.js
+import React from 'react'
+
+const Loader = () => {
+    return (
+        <div className="loader"> </div>
+    )
+}
+
+export default Loader
+
+//home.js
+
+import React, { Fragment, useState, useEffect } from 'react'
+import MetaData from './layout/MetaData'
+import Product from './product/Product'
+import { useDispatch, useSelector } from 'react-redux'
+import { getProducts } from '../actions/productActions'
+import Loader from './layout/Loader'
+
+const Home = () => {
+  const dispatch = useDispatch();
+  const {loading,products,error, productsCount } = useSelector(state => state.products);
+  
+  useEffect( () => { 
+    dispatch(getProducts())
+  }, [dispatch] );
+
+    return (
+      <Fragment>
+      { loading ? <Loader /> : (
+         <Fragment>   
+          <MetaData title={'Buy Best Products Online'} />
+            <h1 id="products_heading">Latest Products</h1>
+            <section id="products" className="container mt-5">
+              <div className="row">
+                {products && products.map(product => (
+                  <Product key={product._id } product={product} />
+                ))}
+                </div>
+                
+            </section>
+          </Fragment>
+        )
+    }
+    </Fragment>
+  );
+    }
+
+export default Home
+       
+//app.js
+import React from 'react'
+import { BrowserRouter as Router } from "react-router-dom";
+
+import Header from './components/layout/Header'
+import Footer from './components/layout/Footer'
+import Home from './components/Home'
+
+function App() {
+  return (
+  	<Router>
+	    <div className="App">
+	      <Header />
+	      <Home />
+	      <Footer />
+	    </div>
+    </Router>
+  );
+}
+
+export default App;
+//productcontroller getproducts
+
+setTimeout(() =>{
+		res.status(200).json({
+		success: true,
+		// count: products.length,
+		productsCount,
+		products
+		}) 	
+	 },2000);
+
+
+//index.js
+import { positions, transitions, Provider as AlertProvider } from 'react-alert'
+import AlertTemplate from 'react-alert-template-basic'
+
+const options = {
+	timeout:5000,
+	position: positions.BOTTOM_CENTER,
+	transition: transitions.SCALE
+}
+ReactDOM.render(
+  <Provider store={store} >
+  	<AlertProvider template = {AlertTemplate} {...options}>
+    <App />
+    </AlertProvider>
+  </Provider>,
+  document.getElementById('root')
+);
+
+//home.js
+import { useAlert } from 'react-alert'
+
+const alert = useAlert();
+
+useEffect( () => { 
+		if(error){
+			alert.success('success')
+			return alert.error(error)
+		}
+		dispatch(getProducts());
+
+	}, [dispatch, alert,error] );
+
+productcontroller getproducts
+return next(new ErrorHandler('my error',400))
+
+PRODUCT DETAILS
+//productreducer
+export const PRODUCT_DETAILS_REQUEST = 'PRODUCT_DETAILS_REQUEST' 
+export const PRODUCT_DETAILS_SUCCESS = 'PRODUCT_DETAILS_SUCCESS'
+export const PRODUCT_DETAILS_FAIL = 'PRODUCT_DETAILS_FAIL'
+
+import { ALL_PRODUCTS_REQUEST,
+		 ALL_PRODUCTS_SUCCESS, 
+		 ALL_PRODUCTS_FAIL,
+		 PRODUCT_DETAILS_REQUEST,
+		 PRODUCT_DETAILS_SUCCESS,
+	     PRODUCT_DETAILS_FAIL,
+		 CLEAR_ERRORS 
+		} from '../constants/productConstants';
+
+export const productsReducer = (state = { products:[] }, action) => {
+	switch(action.type) {
+		case ALL_PRODUCTS_REQUEST:
+			return {
+				loading: true,
+				products: []
+			}
+			
+		case ALL_PRODUCTS_SUCCESS:
+			return {
+				loading: false,
+				products: action.payload.products,
+				productsCount: action.payload.productsCount
+			}
+		case ALL_PRODUCTS_FAIL:
+			return {
+				loading: false,
+				error: action.payload
+			}
+		case CLEAR_ERRORS:
+			return {
+				...state,
+				error: null
+			}
+		default:
+			return state;
+	}
+}
+
+export const productDetailsReducer = (state = { product: {} }, action) => {
+    switch (action.type) {
+
+        case PRODUCT_DETAILS_REQUEST:
+            return {
+                ...state,
+                loading: true
+            }
+
+        case PRODUCT_DETAILS_SUCCESS:
+            return {
+                loading: false,
+                product: action.payload
+            }
+
+        case PRODUCT_DETAILS_FAIL:
+            return {
+                ...state,
+                error: action.payload
+            }
+
+        case CLEAR_ERRORS:
+            return {
+                ...state,
+                error: null
+            }
+
+        default:
+            return state
+    }
+}
+
+//store
+import { productsReducer, productDetailsReducer } from './reducers/productReducers'
+const reducer = combineReducers({
+	products: productsReducer,
+	productDetails: productDetailsReducer
+})
+
+copy constants
+
+//productActions
+export const getProductDetails = (id) => async (dispatch) => {
+    try {
+
+        dispatch({ type: PRODUCT_DETAILS_REQUEST })
+
+        const { data } = await axios.get(`/api/v1/product/${id}`)
+
+        dispatch({
+            type: PRODUCT_DETAILS_SUCCESS,
+            payload: data.product
+        })
+
+    } catch (error) {
+        dispatch({
+            type: PRODUCT_DETAILS_FAIL,
+            payload: error.response.data.message
+        })
+    }
+}
+
+//components/product/productDetails.js
+import React, { Fragment,  useEffect } from 'react'
+import { Carousel } from 'react-bootstrap'
+
+import Loader from '../layout/Loader'
+import MetaData from '../layout/MetaData'
+
+import { useAlert } from 'react-alert'
+import { useDispatch, useSelector } from 'react-redux'
+import { getProductDetails, clearErrors } from '../../actions/productActions'
+
+const ProductDetails = ({ match }) => { 
+	const dispatch = useDispatch();
+    const alert = useAlert();
+
+    const { loading, error, product } = useSelector(state => state.productDetails);
+    
+    useEffect(() => {
+
+        dispatch(getProductDetails(match.params.id))
+
+        if (error) {
+            alert.error(error);
+            dispatch(clearErrors())
+        }
+    }, [dispatch, alert, error, match.params.id]);
+
+     return (
+        <Fragment>
+            {loading ? <Loader /> : (
+                <Fragment>
+                    <MetaData title={product.name} />
+                    <div className="row d-flex justify-content-around">
+                        <div className="col-12 col-lg-5 img-fluid" id="product_image">
+                            <Carousel pause='hover'>
+                                {product.images && product.images.map(image => (
+                                    <Carousel.Item key={image.public_id}>
+                                        <img className="d-block w-100" src={image.url} alt={product.title} />
+                                    </Carousel.Item>
+                                ))}
+                            </Carousel>
+                        </div>
+
+                        <div className="col-12 col-lg-5 mt-5">
+                            <h3>{product.name}</h3>
+                            <p id="product_id">Product # {product._id}</p>
+
+                            <hr />
+
+                            <div className="rating-outer">
+                                <div className="rating-inner" style={{ width: `${(product.ratings / 5) * 100}%` }}></div>
+                            </div>
+                            <span id="no_of_reviews">({product.numOfReviews} Reviews)</span>
+
+                            <hr />
+
+                            <p id="product_price">${product.price}</p>
+                            <div className="stockCounter d-inline">
+                                <span className="btn btn-danger minus" >-</span>
+
+                                <input type="number" className="form-control count d-inline" value={quantity} readOnly />
+
+                                <span className="btn btn-primary plus" onClick={increaseQty}+</span>
+                            </div>
+                            <button type="button" id="cart_btn" className="btn btn-primary d-inline ml-4"  >Add to Cart</button>
+
+                            <hr />
+
+                            <p>Status: <span id="stock_status" className={product.stock > 0 ? 'greenColor' : 'redColor'} >{product.stock > 0 ? 'In Stock' : 'Out of Stock'}</span></p>
+
+                            <hr />
+
+                            <h4 className="mt-2">Description:</h4>
+                            <p>{product.description}</p>
+                            <hr />
+                            <p id="product_seller mb-3">Sold by: <strong>{product.seller}</strong></p>
+
+                            {user ? <button id="review_btn" type="button" className="btn btn-primary mt-4" data-toggle="modal" data-target="#ratingModal" >
+                                Submit Your Review
+                            </button>
+                                :
+                                <div className="alert alert-danger mt-5" type='alert'>Login to post your review.</div>
+                            }
+
+
+                            <div className="row mt-2 mb-5">
+                                <div className="rating w-50">
+
+                                    <div className="modal fade" id="ratingModal" tabIndex="-1" role="dialog" aria-labelledby="ratingModalLabel" aria-hidden="true">
+                                        <div className="modal-dialog" role="document">
+                                            <div className="modal-content">
+                                                <div className="modal-header">
+                                                    <h5 className="modal-title" id="ratingModalLabel">Submit Review</h5>
+                                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div className="modal-body">
+
+                                                    <ul className="stars" >
+                                                        <li className="star"><i className="fa fa-star"></i></li>
+                                                        <li className="star"><i className="fa fa-star"></i></li>
+                                                        <li className="star"><i className="fa fa-star"></i></li>
+                                                        <li className="star"><i className="fa fa-star"></i></li>
+                                                        <li className="star"><i className="fa fa-star"></i></li>
+                                                    </ul>
+
+                                                    <textarea
+                                                        name="review"
+                                                        id="review" className="form-control mt-3"
+                                                        >
+
+                                                    </textarea>
+
+                                                    <button className="btn my-3 float-right review-btn px-4 text-white"  data-dismiss="modal" aria-label="Close">Submit</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </Fragment>
+            )}
+        </Fragment>
+    )
+
+}
+export default ProductDetails
+
+import React, { Fragment,  useEffect } from 'react'
+import { Carousel } from 'react-bootstrap'
+
+import Loader from '../layout/Loader'
+import MetaData from '../layout/MetaData'
+
+import { useAlert } from 'react-alert'
+import { useDispatch, useSelector } from 'react-redux'
+import { getProductDetails, clearErrors } from '../../actions/productActions'
+
+const ProductDetails = ({ match }) => { 
+	const dispatch = useDispatch();
+    const alert = useAlert();
+
+    const { loading, error, product } = useSelector(state => state.productDetails);
+    
+    useEffect(() => {
+
+        dispatch(getProductDetails(match.params.id))
+
+        if (error) {
+            alert.error(error);
+            dispatch(clearErrors())
+        }
+    }, [dispatch, alert, error, match.params.id]);
+
+     return (
+        <Fragment>
+            {loading ? <Loader /> : (
+                <Fragment>
+                    <MetaData title={product.name} />
+                    <div className="row d-flex justify-content-around">
+                        <div className="col-12 col-lg-5 img-fluid" id="product_image">
+                            <Carousel pause='hover'>
+                                {product.images && product.images.map(image => (
+                                    <Carousel.Item key={image.public_id}>
+                                        <img className="d-block w-100" src={image.url} alt={product.title} />
+                                    </Carousel.Item>
+                                ))}
+                            </Carousel>
+                        </div>
+
+                        <div className="col-12 col-lg-5 mt-5">
+                            <h3>{product.name}</h3>
+                            <p id="product_id">Product # {product._id}</p>
+
+                            <hr />
+
+                            <div className="rating-outer">
+                                <div className="rating-inner" style={{ width: `${(product.ratings / 5) * 100}%` }}></div>
+                            </div>
+                            <span id="no_of_reviews">({product.numOfReviews} Reviews)</span>
+
+                            <hr />
+
+                            <p id="product_price">${product.price}</p>
+                            <div className="stockCounter d-inline">
+                                <span className="btn btn-danger minus" >-</span>
+
+                                <input type="number" className="form-control count d-inline"  readOnly />
+
+                                <span className="btn btn-primary plus"> +</span>
+                            </div>
+                            <button type="button" id="cart_btn" className="btn btn-primary d-inline ml-4"  >Add to Cart</button>
+
+                            <hr />
+
+                            <p>Status: <span id="stock_status" className={product.stock > 0 ? 'greenColor' : 'redColor'} >{product.stock > 0 ? 'In Stock' : 'Out of Stock'}</span></p>
+
+                            <hr />
+
+                            <h4 className="mt-2">Description:</h4>
+                            <p>{product.description}</p>
+                            <hr />
+                            <p id="product_seller mb-3">Sold by: <strong>{product.seller}</strong></p>
+
+                            <button id="review_btn" type="button" className="btn btn-primary mt-4" data-toggle="modal" data-target="#ratingModal" >
+                                Submit Your Review
+                            </button>
+                            
+                            <div className="row mt-2 mb-5">
+                                <div className="rating w-50">
+
+                                    <div className="modal fade" id="ratingModal" tabIndex="-1" role="dialog" aria-labelledby="ratingModalLabel" aria-hidden="true">
+                                        <div className="modal-dialog" role="document">
+                                            <div className="modal-content">
+                                                <div className="modal-header">
+                                                    <h5 className="modal-title" id="ratingModalLabel">Submit Review</h5>
+                                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div className="modal-body">
+
+                                                    <ul className="stars" >
+                                                        <li className="star"><i className="fa fa-star"></i></li>
+                                                        <li className="star"><i className="fa fa-star"></i></li>
+                                                        <li className="star"><i className="fa fa-star"></i></li>
+                                                        <li className="star"><i className="fa fa-star"></i></li>
+                                                        <li className="star"><i className="fa fa-star"></i></li>
+                                                    </ul>
+
+                                                    <textarea
+                                                        name="review"
+                                                        id="review" className="form-control mt-3"
+                                                        >
+
+                                                    </textarea>
+
+                                                    <button className="btn my-3 float-right review-btn px-4 text-white"  data-dismiss="modal" aria-label="Close">Submit</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </Fragment>
+            )}
+        </Fragment>
+    )
+
+}
+export default ProductDetails
+
+//app.js
+
+import ProductDetails from './components/product/ProductDetails'
+ <Route path="/product/:id" component={ProductDetails} exact />
+
+ //home.js
+ import Pagination from 'react-js-pagination'
+
+</section>
+ {resPerPage <= count && (
+                        <div className="d-flex justify-content-center mt-5">
+                            <Pagination
+                                activePage={currentPage}
+                                itemsCountPerPage={resPerPage}
+                                totalItemsCount={productsCount}
+                                onChange={setCurrentPageNo}
+                                nextPageText={'Next'}
+                                prevPageText={'Prev'}
+                                firstPageText={'First'}
+                                lastPageText={'Last'}
+                                itemClass="page-item"
+                                linkClass="page-link"
+                            />
+                        </div>
+                    )}
+const [currentPage, setCurrentPage] = useState(1)
+
+function setCurrentPageNo(pageNumber) {
+        setCurrentPage(pageNumber)
+    }
+
+ const { loading, products, error, productsCount, resPerPage, filteredProductsCount } = useSelector(state => state.products)
+
+ dispatch(getProducts(currentPage));
+
+
+ //productcontroller/getproducts
+res.status(200).json({
+		success: true,
+		// count: products.length,
+		productsCount,
+		products,
+		resPerPage
+		})
+
+
+ product actions
+ export const getProducts = (currentPage=1) => async (dispatch) => {
+	try {
+		dispatch({type: ALL_PRODUCTS_REQUEST })
+		const { data }   = await axios.get(`/api/v1/products?page=${currentPage}`);
+
+layout/search.js
+import React, { useState } from 'react'
+
+const Search = ({ history }) => {
+
+    const [keyword, setKeyword] = useState('');
+
+    const searchHandler = (e) => {
+        e.preventDefault()
+
+        if (keyword.trim()) {
+            history.push(`/search/${keyword}`)
+        } else {
+            history.push('/')
+        }
+    }
+
+    return (
+        <form onSubmit={searchHandler} >
+            <div className="input-group">
+                <input
+                    type="text"
+                    id="search_field"
+                    className="form-control"
+                    placeholder="Enter Product Name ..."
+                    onChange={(e) => setKeyword(e.target.value)}
+                />
+                <div className="input-group-append">
+                    <button id="search_btn" className="btn">
+                        <i className="fa fa-search" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    )
+}
+
+export default Search
+
+
+/header.js
+remove 
+<div className="input-group">
+			          <input
+			            type="text"
+			            id="search_field"
+			            className="form-control"
+			            placeholder="Enter Product Name ..."
+			          />
+			          <div className="input-group-append">
+			            <button id="search_btn" className="btn">
+			              <i className="fa fa-search" aria-hidden="true"></i>
+			            </button>
+			          </div>
+			        </div>
+
+header.js
+import { Route, Link } from 'react-router-dom'
+ <div className="col-12 col-md-6 mt-2 mt-md-0">
+			         <Route render={({ history }) => <Search history={history} />} />
+			      </div>
+
+home.js
+
+const keyword = match.params.keywordc
+
+	dispatch(getProducts(currentPage, keyword));
+
+	}, [dispatch, alert,error, currentPage, keyword] );
+
+const Home = ({ match }) => {
+
+//productActions
+export const getProducts = (keyword = '',
+
+const { data }   = await axios.get(`/api/v1/products?keyword=${keyword}&page=${currentPage}`);
+
+app.js
+<Route path="/search/:keyword" component={Home} />
+
+//home.js
+import Slider from 'rc-slider'
+import 'rc-slider/assets/index.css';
+
+const { createSliderWithToolTip } = Slider;
+const Range = createSliderWithToolTip(Slider.Range);
+
+const [price, setPrice] = useState([1, 1000]);
+
+dispatch(getProducts(keyword, currentPage, price));
+
+	}, [dispatch, alert,error, currentPage, keyword, price] );
+
+
+//product Actions
+export const getProducts = (keyword = '', currentPage=1,price)
+
+dispatch({type: ALL_PRODUCTS_REQUEST })
+		    let link = `/api/v1/products?keyword=${keyword}&page=${currentPage}&price[lte]=${price[1]}&price[gte]=${price[0]}`
+
+		const { data }   = await axios.get(link);
+
+//home.js
+
+ return (
+        <Fragment>
+            {loading ? <Loader /> : (
+                <Fragment>
+                    <MetaData title={'Buy Best Products Online'} />
+
+                    <h1 id="products_heading">Latest Products</h1>
+
+                    <section id="products" className="container mt-5">
+                        <div className="row">
+
+                            {keyword ? (
+                                <Fragment>
+                                    <div className="col-6 col-md-3 mt-5 mb-5">
+                                        <div className="px-5">
+                                            <Range
+                                                marks={{
+                                                    1: `$1`,
+                                                    1000: `$1000`
+                                                }}
+                                                min={1}
+                                                max={1000}
+                                                defaultValue={[1, 1000]}
+                                                tipFormatter={value => `$${value}`}
+                                                tipProps={{
+                                                    placement: "top",
+                                                    visible: true
+                                                }}
+                                                value={price}
+                                                onChange={price => setPrice(price)}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="col-6 col-md-9">
+                                        <div className="row">
+                                            {products.map(product => (
+                                                <Product key={product._id} product={product} col={4} />
+                                            ))}
+                                        </div>
+                                    </div>
+                                </Fragment>
+                            ) : (
+                                    products.map(product => (
+                                        <Product key={product._id} product={product} col={3} />
+                                    ))
+                                )}
+
+                        </div>
+                    </section>
+
+                    {resPerPage <= count && (
+                        <div className="d-flex justify-content-center mt-5">
+                            <Pagination
+                                activePage={currentPage}
+                                itemsCountPerPage={resPerPage}
+                                totalItemsCount={productsCount}
+                                onChange={setCurrentPageNo}
+                                nextPageText={'Next'}
+                                prevPageText={'Prev'}
+                                firstPageText={'First'}
+                                lastPageText={'Last'}
+                                itemClass="page-item"
+                                linkClass="page-link"
+                            />
+                        </div>
+                    )}
+
+                </Fragment>
+            )}
+
+        </Fragment>
+    )
+
+//home.js
+const [category, setCategory] = useState('');
+
+	const categories = [
+        'Electronics',
+        'Cameras',
+        'Laptops',
+        'Accessories',
+        'Headphones',
+        'Food',
+        "Books",
+        'Clothes/Shoes',
+        'Beauty/Health',
+        'Sports',
+        'Outdoor',
+        'Home'
+    ]
+	dispatch(getProducts(keyword, currentPage, price, category));
+
+	}, [dispatch, alert,error, currentPage, keyword, price, category] );
+
+//productactions
+export const getProducts = (keyword = '', currentPage = 1, price, category, rating = 0)
+
+//home.js
+<hr className="my-5" />
+
+<div className="mt-5">
+    <h4 className="mb-3">
+        Categories
+    </h4>
+
+    <ul className="pl-0">
+        {categories.map(category => (
+            <li
+                style={{
+                    cursor: 'pointer',
+                    listStyleType: 'none'
+                }}
+                key={category}
+                onClick={() => setCategory(category)}
+            >
+                {category}
+            </li>
+        ))}
+    </ul>
+</div>
+
+
+//productcontroller
+getproducts
+let products = await apiFeatures.query;
+    let filteredProductsCount = products.length;
+    apiFeatures.pagination(resPerPage)
+
+    res.status(200).json({
+		success: true,
+		// count: products.length,
+		productsCount,
+		products,
+		resPerPage,
+		filteredProductsCount,
+		})
+
+//propductreducer
+case ALL_PRODUCTS_SUCCESS:
+			return {
+				loading: false,
+				products: action.payload.products,
+				productsCount: action.payload.productsCount,
+				resPerPage: action.payload.resPerPage,
+				filteredProductsCount: action.payload.filteredProductsCount
+			}
+//home.js
+filteredProductsCount } = useSelector(state => state.products);
+ if (keyword) {
+        count = filteredProductsCount
+    }
+
+ 
